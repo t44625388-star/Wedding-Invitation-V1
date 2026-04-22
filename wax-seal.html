@@ -1,0 +1,158 @@
+<!-- ========================================================
+     WAX SEAL COMPONENT - "THE REALISTIC STAMP"
+     ======================================================== -->
+
+<style>
+    /* 1. PHYSICAL PLACEMENT & CONTACT SHADOW */
+    .seal-anchor { 
+        position: absolute; top: 50%; left: 50%; 
+        transform: translate(-50%, -50%); z-index: 120; 
+        display: flex; flex-direction: column; align-items: center;
+        /* Massive drop shadow casting over the doors to feel physically attached */
+        filter: drop-shadow(0 20px 20px rgba(0,0,0,0.9));
+    }
+    
+    .seal-floater { 
+        position: relative; display: flex; flex-direction: column; align-items: center; 
+        /* Removed the fake hologram floating. Kept physical hover response */
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: none; 
+    }
+    .seal-floater:hover { transform: scale(1.08); }
+    .seal-floater:active { transform: scale(0.95); transition: transform 0.1s; }
+
+    /* 2. THE REALISTIC PREMIUM BURGUNDY WAX */
+    .wax-body {
+        width: 140px; height: 140px;
+        /* Rich Blood/Burgundy dark red, mimicking hard gloss wax */
+        background: radial-gradient(circle at 35% 25%, #9e1423 0%, #610411 35%, #2e0005 80%, #170002 100%);
+        border-radius: 54% 46% 43% 57% / 46% 54% 48% 52%;
+        
+        box-shadow: 
+            inset 8px 8px 12px rgba(255, 120, 120, 0.4), /* Specular Top light */
+            inset -8px -8px 20px rgba(0,0,0,0.9); /* Deep depth shade */
+            
+        display: flex; justify-content: center; align-items: center; position: relative;
+        /* Slow melting edge illusion */
+        animation: organicMelt 10s linear infinite alternate;
+        overflow: hidden; 
+    }
+    @keyframes organicMelt {
+        0% { border-radius: 54% 46% 43% 57% / 46% 54% 48% 52%; }
+        50% { border-radius: 46% 54% 53% 47% / 54% 46% 52% 48%; }
+        100% { border-radius: 50% 50% 45% 55% / 45% 55% 50% 50%; }
+    }
+
+    /* Gloss sweeping for ultra-premium shine */
+    .wax-glass-flare {
+        position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+        background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.2) 48%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.2) 52%, transparent 60%);
+        z-index: 5; pointer-events: none; mix-blend-mode: overlay;
+        animation: sweepReflection 8s infinite ease-in-out;
+    }
+    @keyframes sweepReflection { 0% { transform: translate(-30%, -30%); } 100% { transform: translate(30%, 30%); } }
+
+    /* 3. METALLIC PRESS & FOIL INK */
+    .wax-stamp-core {
+        width: 104px; height: 104px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(10,0,0,0.5) 0%, rgba(0,0,0,0.85) 100%);
+        border: 2px solid rgba(80, 5, 10, 0.9); 
+        box-shadow: inset 0 8px 15px rgba(0,0,0,1), 0 2px 2px rgba(255, 100, 100, 0.3);
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        position: relative; z-index: 6; transform: rotate(-2deg); 
+    }
+
+    .foil-gold { 
+        font-family: 'Great Vibes', cursive; color: #ebd197; margin: 0; line-height: 1; z-index: 5;
+        /* Thick metallic shadow */
+        text-shadow: 0 1px 1px rgba(255, 235, 161, 0.6), 0 -2px 5px rgba(0, 0, 0, 1); 
+    }
+    .emblem-svg { margin-top: 5px; width: 25px; height: 25px; z-index: 5; filter: drop-shadow(0 -1px 2px rgba(0,0,0,1)); }
+    .emblem-path { fill: none; stroke: #ebd197; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Hover hint */
+    .seal-prompt {
+        font-family: 'Cinzel', serif; font-size: 0.8rem; color: #d4a373;
+        letter-spacing: 5px; font-weight: 600; margin-top: 25px;
+        opacity: 0.7; transition: all 0.3s;
+    }
+    .seal-floater:hover .seal-prompt { color: #ebd197; opacity: 1; letter-spacing: 7px; text-shadow: 0 0 10px rgba(212,163,115,0.5);}
+
+    /* 4. GRAVITY SHATTER EXPLOSION PHYSICS */
+    .seal-anchor.shattered .seal-floater { pointer-events: none; opacity: 0; transform: scale(1.5); transition: all 0.2s; }
+    
+    #splatterField { position: absolute; inset: 0; z-index: 100; pointer-events: none; }
+    
+    .splat {
+        position: absolute; border-radius: 50%;
+        background: #7a0a14; /* Dark dry wax chunk */
+        box-shadow: inset 1px 1px 2px rgba(255,100,100,0.4), 0 5px 10px rgba(0,0,0,0.9);
+        top: 50%; left: 50%; opacity: 0; 
+    }
+    @keyframes splatterBurst {
+        0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+        /* Arching drop physics: Fly outwards and fall downwards */
+        100% { transform: var(--s-drift) scale(0) rotate(90deg); opacity: 0; }
+    }
+</style>
+
+<div class="seal-anchor" id="theRoyalSeal">
+    
+    <div class="seal-floater" onclick="shatterSealSequence()">
+        <div class="wax-body">
+            <div class="wax-glass-flare"></div>
+            <div class="wax-stamp-core">
+                <h2 class="foil-gold" id="dynamicGuestStamp">E&J</h2>
+                <svg class="emblem-svg" viewBox="0 0 24 24">
+                    <path class="emblem-path" d="M12,2 C12,2 4,6 4,14 C4,18 7,22 12,22 C17,22 20,18 20,14 C20,6 12,2 12,2 Z"></path>
+                </svg>
+            </div>
+        </div>
+        <div class="seal-prompt">UNLOCK</div>
+    </div>
+    <div id="splatterField"></div>
+</div>
+
+<script>
+    (function(){
+        // Dynamic Init
+        const paramStr = new URLSearchParams(window.location.search).get('guest');
+        if(paramStr) {
+            let coreNode = document.getElementById('dynamicGuestStamp');
+            coreNode.innerText = paramStr;
+            let size = paramStr.length > 5 ? Math.max(1.2, 2.2 - ((paramStr.length - 5) * 0.15)) : 2.2; 
+            coreNode.style.fontSize = `${size}rem`;
+            document.querySelector('.seal-prompt').innerText = `ENTER, ${paramStr.toUpperCase()}`;
+        }
+    })();
+
+    window.shatterSealSequence = function() {
+        const rootSeal = document.getElementById('theRoyalSeal');
+        const splatterBase = document.getElementById('splatterField');
+
+        if(rootSeal) rootSeal.classList.add('shattered');
+        
+        // --- 3D PARTICLE GRAVITY BURST ---
+        for(let s = 0; s < 18; s++) {
+            let chunk = document.createElement('div');
+            chunk.className = 'splat';
+            
+            let chunkW = Math.random() * 15 + 8; // Heavier pieces
+            chunk.style.width = `${chunkW}px`; chunk.style.height = `${chunkW}px`;
+
+            // Splatter math: Outward horizontally, heavily downward vertically
+            let tx = (Math.random() - 0.5) * 400; // Fly left/right
+            let ty = (Math.random() * 300) + 100; // Gravity Fall Downwards
+            
+            chunk.style.setProperty('--s-drift', `translate(${tx}px, ${ty}px)`);
+            chunk.style.animation = `splatterBurst 0.6s cubic-bezier(0.4, 0, 1, 1) forwards`; // Ease-in mimics gravity pulling faster
+
+            splatterBase.appendChild(chunk);
+        }
+
+        // Trigger the door function smoothly
+        if(typeof window.triggerPalaceGates === "function") {
+             window.triggerPalaceGates();
+        }
+    }
+</script>

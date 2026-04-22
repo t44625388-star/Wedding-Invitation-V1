@@ -1,0 +1,218 @@
+<!-- ========================================================
+     EVENTS COMPONENT - "THE GILDED TICKET DECK"
+     ======================================================== -->
+
+<style>
+    /* ======================================================
+       1. GLOBAL SECTION CONTAINER & ATMOSPHERE
+       ====================================================== */
+    .events-cosmos {
+        position: relative; width: 100vw; min-height: 100vh;
+        background: #020408; /* Extremely dark for luxury contrast */
+        padding: clamp(80px, 12vh, 150px) 0; overflow: hidden;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    
+    /* Background deep-glow mandala overlay */
+    .events-cosmos::before {
+        content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+        background: radial-gradient(circle at center, rgba(212,163,115,0.06) 0%, transparent 60%);
+    }
+
+    /* Decorative giant geometric rings slowly spinning in the far back */
+    .e-geo-ring {
+        position: absolute; border-radius: 50%;
+        border: 1px dashed rgba(255,255,255,0.04);
+        pointer-events: none; z-index: 0;
+        animation: slowGeoSpin 60s linear infinite;
+    }
+    .e-ring-1 { width: 150vw; height: 150vw; top: -50%; left: -25%; border: 2px dashed rgba(212,163,115,0.05); }
+    .e-ring-2 { width: 80vw; height: 80vw; bottom: -40%; right: -20%; animation-direction: reverse; }
+
+    @keyframes slowGeoSpin { 100% { transform: rotate(360deg); } }
+
+    /* ======================================================
+       2. TYPOGRAPHY: THE SECTION HEADER
+       ====================================================== */
+    .e-header {
+        position: relative; z-index: 10; text-align: center; margin-bottom: clamp(50px, 8vh, 80px);
+        opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .events-cosmos.unlocked .e-header { opacity: 1; transform: translateY(0); }
+    
+    .e-mini-text { font-family: 'Cinzel', serif; font-size: clamp(0.7rem, 2vw, 0.85rem); color: rgba(212,163,115,0.8); letter-spacing: 6px; text-transform: uppercase; margin-bottom: 15px; }
+    .e-main-title { font-family: 'Great Vibes', cursive; font-size: clamp(3rem, 6vw, 4.5rem); color: #fff; line-height: 1; margin: 0; text-shadow: 0 5px 25px rgba(0,0,0,0.9); }
+
+    /* ======================================================
+       3. THE TICKET DECK LAYOUT (Responsive Flex Box)
+       ====================================================== */
+    .e-deck {
+        position: relative; z-index: 10; width: 90%; max-width: 1300px;
+        display: flex; flex-direction: row; align-items: stretch; justify-content: center;
+        gap: 30px; padding: 20px 0;
+        /* Mobile handling: turn to column and space out */
+        flex-wrap: wrap;
+    }
+    @media (max-width: 900px) { .e-deck { gap: 40px; } }
+
+    /* ======================================================
+       4. THE GILDED EVENT CARD (Visual design)
+       ====================================================== */
+    .e-card {
+        flex: 1; min-width: 280px; max-width: 380px; position: relative;
+        display: flex; flex-direction: column; align-items: center; text-align: center;
+        background: rgba(11, 19, 30, 0.8); backdrop-filter: blur(20px);
+        border: 1px solid rgba(212, 163, 115, 0.2); border-radius: 12px;
+        padding: 50px 30px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 0 40px rgba(0,0,0,0.4);
+        
+        /* The Base animations physics */
+        transform-style: preserve-3d;
+        transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        
+        /* Hidden initial state for scroll reveal */
+        opacity: 0; transform: translateY(80px) rotateX(-10deg);
+    }
+
+    /* Staggered load for cards */
+    .events-cosmos.unlocked .e-card { opacity: 1; transform: translateY(0) rotateX(0); }
+    .events-cosmos.unlocked .e-c-2 { transition-delay: 0.2s; }
+    .events-cosmos.unlocked .e-c-3 { transition-delay: 0.4s; }
+
+    /* The glowing Gold Light sweep acting as card edge reflection */
+    .e-card::before {
+        content: ''; position: absolute; top: -1px; left: -1px; right: -1px; bottom: -1px;
+        background: linear-gradient(135deg, transparent 20%, rgba(212,163,115,0.6) 50%, transparent 80%);
+        background-size: 200% 200%; border-radius: 12px; z-index: -1; pointer-events: none;
+        background-position: -100% -100%; transition: all 0.5s;
+    }
+
+    /* --- THE 3D HOVER PUSH MECHANISM (Complex Selector) --- */
+    /* Push non-hovered siblings backwards into shadow */
+    .e-deck:hover .e-card {
+        transform: scale(0.92) translateZ(-50px);
+        opacity: 0.4; filter: blur(3px) grayscale(50%);
+    }
+    /* Bring active card super forward with brilliant light */
+    .e-deck .e-card:hover {
+        transform: scale(1.08) translateZ(50px) !important;
+        opacity: 1 !important; filter: blur(0px) grayscale(0%) !important;
+        background: rgba(11, 19, 30, 0.95);
+        box-shadow: 0 40px 80px rgba(0,0,0,1), 0 0 30px rgba(212, 163, 115, 0.1);
+        border-color: rgba(212, 163, 115, 0.6);
+    }
+    .e-deck .e-card:hover::before { animation: edgeShimmer 2s infinite; }
+
+    @keyframes edgeShimmer {
+        0% { background-position: -100% -100%; } 100% { background-position: 200% 200%; }
+    }
+
+    /* ======================================================
+       5. INSIDE THE TICKET: ICONOGRAPHY & TEXT
+       ====================================================== */
+    .e-icon-ring {
+        width: 70px; height: 70px; border-radius: 50%;
+        border: 1px dashed rgba(212,163,115,0.4); display: flex; justify-content: center; align-items: center;
+        margin-bottom: 25px; color: #d4a373; font-size: 1.5rem; position: relative;
+        transition: transform 0.4s;
+    }
+    .e-card:hover .e-icon-ring { transform: translateY(-5px); border-style: solid; box-shadow: 0 10px 20px rgba(212,163,115,0.2); }
+
+    .e-title { font-family: 'Cinzel', serif; font-size: 1.4rem; color: #fff; line-height: 1.2; margin-bottom: 10px; }
+    
+    .e-timing {
+        font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 500;
+        letter-spacing: 2px; color: #d4a373; text-transform: uppercase; margin-bottom: 20px;
+    }
+
+    .e-line { width: 30px; height: 2px; background: rgba(255,255,255,0.1); margin-bottom: 20px; transition: width 0.4s; }
+    .e-card:hover .e-line { width: 80px; background: #d4a373; }
+
+    .e-desc { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-weight: 300; color: rgba(255,255,255,0.6); line-height: 1.7; flex: 1; margin-bottom: 30px;}
+
+    /* Magic Location Button */
+    .e-btn {
+        display: inline-block; padding: 12px 25px; border-radius: 4px;
+        background: transparent; border: 1px solid rgba(212,163,115,0.5);
+        color: #d4a373; font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 2px;
+        text-transform: uppercase; text-decoration: none; position: relative; overflow: hidden;
+        transition: all 0.3s;
+    }
+    .e-btn::before {
+        content: ''; position: absolute; inset: 0; background: #d4a373; z-index: -1; transform: scaleY(0); transform-origin: bottom; transition: transform 0.3s;
+    }
+    .e-btn:hover { color: #020408; font-weight: 600; border-color: #d4a373;}
+    .e-btn:hover::before { transform: scaleY(1); }
+
+</style>
+
+<!-- ========================================================
+     THE HTML ENGINE (Tickets layout)
+     ======================================================== -->
+<div class="events-cosmos" id="evnTrigTarget">
+
+    <!-- Subtle Environment Geography -->
+    <div class="e-geo-ring e-ring-1"></div>
+    <div class="e-geo-ring e-ring-2"></div>
+
+    <!-- Title Entry -->
+    <div class="e-header">
+        <div class="e-mini-text">Follow our Journey</div>
+        <h2 class="e-main-title">The Celebration</h2>
+    </div>
+
+    <!-- The Magical Hover Deck -->
+    <div class="e-deck">
+        
+        <!-- CARD 1 -->
+        <div class="e-card e-c-1">
+            <div class="e-icon-ring"><i class="fas fa-glass-cheers"></i></div>
+            <div class="e-title">Welcome<br>Dinner</div>
+            <div class="e-timing">Sept 14 <span style="margin:0 5px; opacity:0.5;">•</span> 7:00 PM</div>
+            <div class="e-line"></div>
+            <div class="e-desc">Join us under the festoon lights for a casual evening of wood-fired pizza, cocktails, and endless laughter before the big day.</div>
+            <a href="https://maps.google.com" target="_blank" class="e-btn">Location Pin</a>
+        </div>
+
+        <!-- CARD 2: THE MAIN HIGHLIGHT -->
+        <!-- Adding inline border color overrides to make the Wedding Ceremony look even more VIP -->
+        <div class="e-card e-c-2" style="border-top: 3px solid #d4a373; background: rgba(11, 19, 30, 0.9);">
+            <div class="e-icon-ring" style="color: #fff; background: rgba(212,163,115,0.2); border-style:solid; border-color:#d4a373;"><i class="fas fa-church"></i></div>
+            <div class="e-title">The Main<br>Vows</div>
+            <div class="e-timing">Sept 15 <span style="margin:0 5px; opacity:0.5;">•</span> 3:00 PM</div>
+            <div class="e-line" style="background:#d4a373; width:40px;"></div>
+            <div class="e-desc">Witness our "I Do's" among the olive groves. The seating begins exactly at 2:30 PM. Please adhere to the Formal Black-Tie dress code.</div>
+            <a href="https://maps.google.com" target="_blank" class="e-btn">Location Pin</a>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="e-card e-c-3">
+            <div class="e-icon-ring"><i class="fas fa-music"></i></div>
+            <div class="e-title">Grand<br>Reception</div>
+            <div class="e-timing">Sept 15 <span style="margin:0 5px; opacity:0.5;">•</span> 6:30 PM</div>
+            <div class="e-line"></div>
+            <div class="e-desc">Following the ceremony, prepare for champagne toasts, a grand Italian feast, and dancing until the sun attempts to rise.</div>
+            <a href="https://maps.google.com" target="_blank" class="e-btn">Location Pin</a>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================================
+     ANIMATION TRIGGER (Observer Logic)
+     ======================================================== -->
+<script>
+    (function(){
+        // Super minimal Scroll Revealer to drop the Cards onto the deck
+        const evnContainer = document.getElementById('evnTrigTarget');
+        const watch = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting) {
+                // Adds a master CSS class that handles CSS-level transition chaining 
+                evnContainer.classList.add('unlocked');
+                watch.disconnect();
+            }
+        }, { threshold: 0.15 });
+        watch.observe(evnContainer);
+    })();
+</script>

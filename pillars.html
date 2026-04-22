@@ -1,0 +1,255 @@
+<!-- ========================================================
+     PILLARS COMPONENT - "THE ROYAL ACCORDION VAULT"
+     ======================================================== -->
+
+<style>
+    /* ======================================================
+       1. GLOBAL CONTAINER & CINEMATIC ATMOSPHERE
+       ====================================================== */
+    .pil-cosmos {
+        position: relative; width: 100vw; background: #010204;
+        padding: clamp(60px, 12vh, 120px) 0; overflow: hidden;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    
+    /* Mysterious ground fog/light effect at bottom */
+    .pil-cosmos::after {
+        content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 30%; pointer-events: none;
+        background: linear-gradient(to top, rgba(212,163,115,0.08), transparent); z-index: 1;
+    }
+
+    /* ======================================================
+       2. EDITORIAL TYPOGRAPHY
+       ====================================================== */
+    .pil-header {
+        position: relative; z-index: 10; text-align: center; margin-bottom: clamp(40px, 8vh, 80px);
+        opacity: 0; transform: translateY(40px) scale(0.95); transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .pil-cosmos.unlocked .pil-header { opacity: 1; transform: translateY(0) scale(1); }
+
+    .pil-subtitle { font-family: 'Cinzel', serif; font-size: clamp(0.7rem, 2vw, 0.85rem); color: rgba(212,163,115,0.7); letter-spacing: 6px; text-transform: uppercase; margin-bottom: 15px; }
+    .pil-maintitle { font-family: 'Great Vibes', cursive; font-size: clamp(3rem, 6vw, 4.5rem); color: #fff; line-height: 1; margin: 0; text-shadow: 0 5px 25px rgba(0,0,0,0.9); }
+
+    /* ======================================================
+       3. THE EXPANDING ACCORDION GALLERY (The WOW Effect)
+       ====================================================== */
+    .pil-gallery {
+        position: relative; z-index: 10; width: 95%; max-width: 1400px;
+        display: flex; height: clamp(400px, 60vh, 600px);
+        gap: 10px; /* Small gap between pillars */
+    }
+
+    /* Base Slat Styling */
+    .pil-slat {
+        position: relative; flex: 1; border-radius: 12px; overflow: hidden;
+        background: #0b131e; border: 1px solid rgba(255, 235, 161, 0.05);
+        cursor: none; /* Let the custom pointer handle it */
+        /* Core magical transition engine */
+        transition: flex 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s ease, transform 0.8s ease;
+        
+        /* Initial hiding for Observer Reveal */
+        opacity: 0; transform: translateY(100px);
+    }
+    .pil-cosmos.unlocked .pil-slat { opacity: 1; transform: translateY(0); }
+
+    /* Delays so they drop in staggered left to right */
+    .pil-cosmos.unlocked .pil-slat:nth-child(1) { transition-delay: 0.1s; }
+    .pil-cosmos.unlocked .pil-slat:nth-child(2) { transition-delay: 0.2s; }
+    .pil-cosmos.unlocked .pil-slat:nth-child(3) { transition-delay: 0.3s; }
+    .pil-cosmos.unlocked .pil-slat:nth-child(4) { transition-delay: 0.4s; }
+    .pil-cosmos.unlocked .pil-slat:nth-child(5) { transition-delay: 0.5s; }
+
+    /* ======================================================
+       4. MAGNETIC HOVER PHYSICS
+       ====================================================== */
+    /* When user hovers on ANY card in the gallery... */
+    @media (min-width: 800px) {
+        .pil-gallery:hover .pil-slat { 
+            flex: 0.5; /* Shrink all inactive slats */
+            filter: brightness(0.3) grayscale(100%); 
+        }
+        
+        /* ...But EXPAND the exactly hovered card heavily! */
+        .pil-gallery .pil-slat:hover { 
+            flex: 4; /* Huge expansion */
+            filter: brightness(1) grayscale(0%);
+            border: 1px solid rgba(212,163,115,0.6);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 50px rgba(212,163,115,0.2);
+            z-index: 10;
+        }
+    }
+
+    /* Images acting like lenses */
+    .p-img {
+        width: 100%; height: 100%; object-fit: cover;
+        /* Defaults for PC waiting for hover. Unchanged on mobile */
+        filter: grayscale(80%) contrast(1.2); transition: all 1s ease;
+    }
+    .pil-slat:hover .p-img { filter: grayscale(0%) contrast(1); transform: scale(1.05); }
+
+    /* ======================================================
+       5. CONTENT (VERTICAL TO HORIZONTAL TEXT MAGIC)
+       ====================================================== */
+    /* Inner dark gradient holding the text clearly */
+    .p-shadow {
+        position: absolute; inset: 0; pointer-events: none;
+        background: linear-gradient(to top, rgba(1, 2, 4, 0.95) 0%, rgba(1, 2, 4, 0.4) 30%, transparent 60%, rgba(1,2,4,0.7) 100%);
+    }
+
+    .p-info {
+        position: absolute; bottom: 0; left: 0; width: 100%; padding: 30px;
+        display: flex; flex-direction: column; justify-content: flex-end;
+    }
+
+    .p-name { 
+        font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 600; color: #fff;
+        opacity: 0; transform: translateY(20px); white-space: nowrap; transition: all 0.5s ease;
+    }
+    .p-role {
+        font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: #ebd197; line-height: 1;
+        opacity: 0; transform: translateY(20px); white-space: nowrap; transition: all 0.5s ease 0.1s;
+        text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+    }
+    
+    /* Text pop out ONLY when expanded */
+    .pil-slat:hover .p-name { opacity: 1; transform: translateY(0); }
+    .pil-slat:hover .p-role { opacity: 1; transform: translateY(0); }
+
+    /* The Vertical Text (Visible ONLY when shrunk) */
+    .p-vertical-label {
+        position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+        font-family: 'Montserrat', sans-serif; font-size: 0.75rem; letter-spacing: 4px; color: #cbd5e1; text-transform: uppercase;
+        writing-mode: vertical-rl; transform: translateX(-50%) rotate(180deg);
+        transition: opacity 0.3s;
+    }
+    /* Hide the vertical text when expanded */
+    .pil-slat:hover .p-vertical-label { opacity: 0; }
+
+    /* ======================================================
+       6. MOBILE & TABLET FALLBACKS (Smart Wrapping)
+       ====================================================== */
+    /* On Mobile, vertical slats don't work due to no hover. 
+       We convert them into beautiful layered horizontal cards. */
+    @media (max-width: 800px) {
+        .pil-gallery { flex-direction: column; height: auto; gap: 25px; padding-bottom: 50px; }
+        .pil-slat { height: 200px; flex: unset; opacity: 0; transform: translateY(30px) !important; filter: none !important; }
+        
+        .p-img { filter: grayscale(0%) contrast(1.1); transform: scale(1); }
+        .p-vertical-label { display: none; } /* Hide vertical text completely */
+        
+        /* Auto reveal text on mobile */
+        .p-name, .p-role { opacity: 1; transform: translateY(0); white-space: normal;}
+        .p-name { font-size: 1.2rem; } .p-role { font-size: 1.8rem; }
+    }
+</style>
+
+<!-- ========================================================
+     HTML ARCHITECTURE
+     ======================================================== -->
+<div class="pil-cosmos" id="pilTrigTarget">
+
+    <div class="pil-header">
+        <div class="pil-subtitle">Our Inner Circle</div>
+        <h2 class="pil-maintitle">Pillars of Strength</h2>
+    </div>
+
+    <div class="pil-gallery">
+        
+        <!-- Slat 1: Maid of Honor -->
+        <div class="pil-slat c-ptr">
+            <img class="p-img" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Maid of Honor">
+            <div class="p-shadow"></div>
+            <!-- Collapsed Name -->
+            <div class="p-vertical-label">Sophia</div>
+            <!-- Expanded Details -->
+            <div class="p-info">
+                <div class="p-name">Sophia Williams</div>
+                <div class="p-role">Maid of Honor</div>
+            </div>
+        </div>
+
+        <!-- Slat 2: Father of Bride -->
+        <div class="pil-slat c-ptr">
+            <img class="p-img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Father">
+            <div class="p-shadow"></div>
+            <div class="p-vertical-label">Robert</div>
+            <div class="p-info">
+                <div class="p-name">Robert Collins</div>
+                <div class="p-role">Father of the Bride</div>
+            </div>
+        </div>
+
+        <!-- Slat 3: Mother of Bride (CENTER - Natural anchor point) -->
+        <div class="pil-slat c-ptr">
+            <img class="p-img" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Mother">
+            <div class="p-shadow"></div>
+            <div class="p-vertical-label">Eleanor</div>
+            <div class="p-info">
+                <div class="p-name">Eleanor Collins</div>
+                <div class="p-role">Mother of the Bride</div>
+            </div>
+        </div>
+
+        <!-- Slat 4: Best Man -->
+        <div class="pil-slat c-ptr">
+            <img class="p-img" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Best Man">
+            <div class="p-shadow"></div>
+            <div class="p-vertical-label">Marcus</div>
+            <div class="p-info">
+                <div class="p-name">Marcus Reed</div>
+                <div class="p-role">The Best Man</div>
+            </div>
+        </div>
+
+        <!-- Slat 5: Special Role / Groomsman -->
+        <div class="pil-slat c-ptr">
+            <img class="p-img" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Brother">
+            <div class="p-shadow"></div>
+            <div class="p-vertical-label">Julian</div>
+            <div class="p-info">
+                <div class="p-name">Julian Sterling</div>
+                <div class="p-role">Brother of Groom</div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ========================================================
+     ANIMATION TRIGGER (Observer) & UI TOUCHES
+     ======================================================== -->
+<script>
+    (function(){
+        const pilContainer = document.getElementById('pilTrigTarget');
+        const plWatch = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting) {
+                pilContainer.classList.add('unlocked');
+                plWatch.disconnect();
+            }
+        }, { threshold: 0.2 });
+        plWatch.observe(pilContainer);
+
+        // Smart Hardware Viewfinder setup (Applies cinematic pointer effect on desktop only)
+        if(window.matchMedia("(hover: hover)").matches) {
+            const rings = document.getElementById('cursorRing');
+            const sls = document.querySelectorAll('.c-ptr');
+            
+            sls.forEach(s => {
+                s.addEventListener('mouseenter', () => {
+                    if(rings) {
+                        rings.style.width = '80px'; rings.style.height = '80px';
+                        rings.style.backgroundColor = 'rgba(255,255,255,0.1)';
+                        rings.style.backdropFilter = 'blur(4px)'; // Cool distortion effect
+                    }
+                });
+                s.addEventListener('mouseleave', () => {
+                    if(rings) {
+                        rings.style.width = '35px'; rings.style.height = '35px';
+                        rings.style.backgroundColor = 'transparent';
+                        rings.style.backdropFilter = 'none';
+                    }
+                });
+            });
+        }
+    })();
+</script>

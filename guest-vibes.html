@@ -1,0 +1,191 @@
+<!-- ========================================================
+     GUEST VIBES COMPONENT - "THE VELVET VINYL CLUB"
+     ======================================================== -->
+
+<style>
+    /* ======================================================
+       1. MAIN ROOM (Club Vibes Atmospheric lighting)
+       ====================================================== */
+    .vibe-cosmos {
+        position: relative; width: 100vw; min-height: 100vh;
+        /* Mood transition to exclusive high-energy black-gold */
+        background: linear-gradient(135deg, #020408 0%, #0c0812 100%);
+        padding: clamp(80px, 12vh, 150px) 0; overflow: hidden;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+
+    /* Ambient Club Light glow (Gold + Neon Crimson Red) */
+    .vibe-cosmos::before {
+        content: ''; position: absolute; bottom: -20%; left: -10%; width: 60vw; height: 60vw;
+        background: radial-gradient(circle, rgba(140, 13, 22, 0.2) 0%, transparent 70%); filter: blur(60px); z-index: 1; pointer-events: none;
+        animation: glowShift 10s infinite alternate;
+    }
+    .vibe-cosmos::after {
+        content: ''; position: absolute; top: -10%; right: -20%; width: 50vw; height: 50vw;
+        background: radial-gradient(circle, rgba(212, 163, 115, 0.15) 0%, transparent 60%); filter: blur(50px); z-index: 1; pointer-events: none;
+        animation: glowShift 8s infinite alternate-reverse;
+    }
+    @keyframes glowShift { 100% { transform: scale(1.3) translateY(30px); opacity: 0.6; } }
+
+    /* Soundwave Graphic background illusion */
+    .v-soundwave-back {
+        position: absolute; left: 0; top: 50%; width: 100%; transform: translateY(-50%); z-index: 0; opacity: 0.03; pointer-events: none;
+        display: flex; gap: 5px; justify-content: center; align-items: center;
+    }
+    .v-bar { width: clamp(4px, 1vw, 8px); background: #d4a373; border-radius: 10px; height: 10px; animation: pumpAudio 1.5s infinite ease-in-out; }
+    /* Generates organic pumping lengths */
+    .v-bar:nth-child(2n) { animation-duration: 0.8s; } .v-bar:nth-child(3n) { animation-duration: 1.2s; } .v-bar:nth-child(4n) { animation-duration: 2s; }
+    
+    @keyframes pumpAudio { 0%, 100% { height: 10vh; } 50% { height: 40vh; } }
+
+    /* ======================================================
+       2. LAYOUT ENGINE (Interactive Grid Base)
+       ====================================================== */
+    .vibe-deck {
+        position: relative; z-index: 10; width: 90%; max-width: 1200px;
+        display: flex; align-items: center; justify-content: space-between; gap: 50px; flex-wrap: wrap-reverse;
+    }
+
+    /* Left Block (Music/Typography Action Text) */
+    .vibe-info {
+        flex: 1; min-width: 320px;
+        /* Scroll Enter Hidden State */
+        opacity: 0; transform: translateX(-60px); transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .vibe-cosmos.unlocked .vibe-info { opacity: 1; transform: translateX(0); }
+
+    /* Right Block (Vinyl Disc Object Art) */
+    .vibe-art {
+        flex: 1; min-width: 300px; display: flex; justify-content: center; position: relative;
+        opacity: 0; transform: scale(0.9) translateX(40px); transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s;
+    }
+    .vibe-cosmos.unlocked .vibe-art { opacity: 1; transform: scale(1) translateX(0); }
+
+    /* ======================================================
+       3. TYPOGRAPHY DESIGN
+       ====================================================== */
+    .vi-title-main { font-family: 'Great Vibes', cursive; font-size: clamp(4rem, 8vw, 6.5rem); color: #ebd197; line-height: 0.9; margin: 0; text-shadow: 0 5px 20px rgba(0,0,0,0.9); }
+    .vi-title-sub { font-family: 'Cinzel', serif; font-size: clamp(1.2rem, 3vw, 2rem); color: white; letter-spacing: 4px; margin-top: 15px; margin-bottom: 25px; text-transform: uppercase; }
+    
+    .vi-desc { font-family: 'Montserrat', sans-serif; font-size: 0.9rem; font-weight: 300; line-height: 1.8; color: #a0aec0; margin-bottom: 40px; max-width: 500px; }
+
+    /* Sleek Night-mode VIP glowing action jump button */
+    .v-action-btn {
+        display: inline-flex; align-items: center; gap: 15px; text-decoration: none;
+        padding: 18px 35px; border-radius: 40px; background: rgba(212,163,115,0.05); border: 1px solid rgba(212,163,115,0.4);
+        font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 3px; font-weight: 600; color: #ebd197; text-transform: uppercase;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 0 rgba(212,163,115,0); transition: all 0.4s ease;
+    }
+    
+    .v-action-btn:hover { background: rgba(212,163,115,0.2); box-shadow: 0 15px 40px rgba(0,0,0,0.8), inset 0 0 20px rgba(212,163,115,0.3); transform: translateY(-5px); border-color: #d4a373;}
+    
+    /* Jumping small music note */
+    .va-icon { font-size: 1.1rem; animation: hop 2s ease infinite; color: #fff;}
+    @keyframes hop { 50% { transform: translateY(-5px) rotate(10deg); color: #ebd197; } }
+
+    /* ======================================================
+       4. THE ULTIMATE SPINNING VINYL RECORD (Photorealistic CSS trickery)
+       ====================================================== */
+    .turntable-platter {
+        width: clamp(280px, 45vw, 420px); height: clamp(280px, 45vw, 420px);
+        border-radius: 50%;
+        /* Authentic Vinyl micro-groove texture mix */
+        background: 
+            /* Lighting sheen sweeping through */
+            linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 45%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.1) 55%, transparent 60%),
+            /* Groove rings lines overlapping tightly */
+            repeating-radial-gradient( #111 0px, #181818 2px, #0a0a0a 4px );
+            
+        box-shadow: 
+            15px 30px 50px rgba(0,0,0,0.9), 
+            inset 0 0 15px rgba(255,255,255,0.05),
+            inset 5px -5px 25px rgba(0,0,0,0.9);
+
+        display: flex; justify-content: center; align-items: center;
+        
+        /* The infinite record engine running logic */
+        animation: spinTrack 8s linear infinite forwards;
+        transform: translateZ(50px);
+    }
+    
+    @keyframes spinTrack { 100% { transform: rotate(360deg); } }
+
+    /* Core / Sticker Area of vinyl */
+    .v-record-core {
+        width: clamp(100px, 15vw, 150px); height: clamp(100px, 15vw, 150px);
+        border-radius: 50%; background: #6b0c15; border: 3px solid #d4a373;
+        box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.6);
+        display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+    }
+
+    /* Small font stylizations on core record label */
+    .vr-tx-s { font-family: 'Cinzel', serif; font-size: clamp(0.3rem, 1vw, 0.45rem); letter-spacing: 2px; color: rgba(255,255,255,0.6); margin-top: -15px; }
+    .vr-tx-b { font-family: 'Great Vibes', cursive; font-size: clamp(1rem, 2.5vw, 1.8rem); color: #ebd197; line-height: 1; transform: rotate(-5deg); margin-top: 5px; text-shadow: 0 2px 5px rgba(0,0,0,0.8);}
+    
+    .v-hole { width: clamp(8px, 1vw, 15px); height: clamp(8px, 1vw, 15px); background: #020408; border-radius: 50%; margin: 8px 0; border: 1px solid rgba(255,255,255,0.2); }
+
+    /* Handle specific alignment shifts gracefully */
+    @media (max-width: 950px) {
+        .vibe-deck { flex-direction: column; text-align: center; justify-content: center; }
+        .vi-desc { margin: 0 auto 30px auto;}
+    }
+
+</style>
+
+<!-- ========================================================
+     THE NIGHT-CLUB ROOM (Html structural Layout)
+     ======================================================== -->
+<div class="vibe-cosmos" id="vibeScrollWatch">
+    
+    <!-- Immersive backdrop components -->
+    <div class="v-soundwave-back">
+        <!-- Generates vertical light audio bars. Javascript is best trick to generate heavy lines -->
+        <script> for(let x=0; x<40; x++){ document.write("<div class='v-bar'></div>"); } </script>
+    </div>
+
+    <!-- Interface Row Wrapper-->
+    <div class="vibe-deck">
+        
+        <div class="vibe-info">
+            <h2 class="vi-title-main">Set the Mood</h2>
+            <div class="vi-title-sub">Select the Soundtrack</div>
+            <p class="vi-desc">The venue's ready. The stars are set. Now all we need is your perfect song playing. Suggest tracks that will physically drag you out onto the dance floor all night long. Put in your magic notes on the RSVP card attached!</p>
+            
+            <!-- Quick smooth Link connection pushing towards Form Below seamlessly -->
+            <a href="#mainRsvpForm" onclick="document.getElementById('glassFormTarget').scrollIntoView({behavior: 'smooth'})" class="v-action-btn">
+                <i class="fas fa-headphones-alt va-icon"></i> Drop the Beats
+            </a>
+        </div>
+
+        <div class="vibe-art">
+            <div class="turntable-platter">
+                <div class="v-record-core">
+                    <span class="vr-tx-s">SIDE A</span>
+                    <div class="v-hole"></div>
+                    <span class="vr-tx-b">Party</span>
+                    <span class="vr-tx-s" style="margin-top:2px;">MIX 1</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ========================================================
+     SCRIPT MECHANISM
+     ======================================================== -->
+<script>
+    (function(){
+        // Simple watcher unlock animation flow to match whole App rhythm seamlessly 
+        const watcherTar = document.getElementById('vibeScrollWatch');
+        
+        const myWactchHndler = new IntersectionObserver((entr)=> {
+             if(entr[0].isIntersecting) {
+                 watcherTar.classList.add('unlocked');
+                 myWactchHndler.disconnect(); // Do job un plug save resource.. Boom
+             }
+        }, { threshold : 0.3 } ); 
+
+        myWactchHndler.observe(watcherTar);
+    })();
+</script>

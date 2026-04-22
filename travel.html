@@ -1,0 +1,228 @@
+<!-- ========================================================
+     TRAVEL & STAY COMPONENT - "THE VIP CONCIERGE"
+     ======================================================== -->
+
+<style>
+    /* ======================================================
+       1. GLOBAL VAULT SCENE (The Background Vibe)
+       ====================================================== */
+    .travel-cosmos {
+        position: relative; width: 100vw; min-height: 100vh;
+        /* Sleek Navy/Charcoal transition */
+        background: linear-gradient(180deg, #010204 0%, #060b13 100%);
+        padding: clamp(80px, 12vh, 150px) 0; overflow: hidden;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    
+    /* Background subtle Grid / Compass illusion */
+    .travel-cosmos::before {
+        content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0.15;
+        background-image: 
+            linear-gradient(rgba(212, 163, 115, 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(212, 163, 115, 0.3) 1px, transparent 1px);
+        background-size: 80px 80px;
+    }
+    .travel-cosmos::after {
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none;
+        background: radial-gradient(ellipse at 50% 50%, transparent 20%, #010204 80%);
+    }
+
+    /* ======================================================
+       2. TYPOGRAPHY: THE CONCIERGE DESK
+       ====================================================== */
+    .tc-header {
+        position: relative; z-index: 10; text-align: center; margin-bottom: clamp(60px, 8vh, 80px);
+        opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .travel-cosmos.unlocked .tc-header { opacity: 1; transform: translateY(0); }
+    
+    .tc-sub { font-family: 'Cinzel', serif; font-size: clamp(0.7rem, 2vw, 0.85rem); color: rgba(212,163,115,0.7); letter-spacing: 5px; text-transform: uppercase; margin-bottom: 10px; }
+    .tc-main { font-family: 'Great Vibes', cursive; font-size: clamp(3rem, 6vw, 4.5rem); color: #fff; line-height: 1; margin: 0; text-shadow: 0 5px 25px rgba(0,0,0,0.9); }
+    .tc-note { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: #a0aec0; max-width: 600px; margin: 25px auto 0 auto; line-height: 1.8; font-weight: 300;}
+
+    /* ======================================================
+       3. THE PASSPORT CARDS SHELF (FLEX GRID)
+       ====================================================== */
+    .tc-shelf {
+        position: relative; z-index: 10; width: 90%; max-width: 1200px;
+        display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(20px, 3vw, 40px);
+    }
+
+    .tc-card {
+        flex: 1; min-width: 300px; max-width: 400px; height: 420px;
+        position: relative; border-radius: 12px; overflow: hidden;
+        cursor: none; /* Relies on Global Ring cursor */
+        box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        border: 1px solid rgba(255, 235, 161, 0.05);
+        /* Hide off-screen initially */
+        opacity: 0; transform: translateY(60px) scale(0.95);
+        transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    
+    /* Reveal Triggers */
+    .travel-cosmos.unlocked .tc-card { opacity: 1; transform: translateY(0) scale(1); }
+    .travel-cosmos.unlocked .tc-2 { transition-delay: 0.15s; }
+    .travel-cosmos.unlocked .tc-3 { transition-delay: 0.3s; }
+
+    /* The Parallax Hover Jump */
+    .tc-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 40px rgba(212,163,115,0.15);
+        border-color: rgba(212, 163, 115, 0.4); z-index: 5;
+    }
+
+    /* ======================================================
+       4. CINEMATIC BACKGROUND MASKING 
+       ====================================================== */
+    .tcc-bg {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background-size: cover; background-position: center; z-index: 0;
+        /* Extremely dark, dead look */
+        filter: grayscale(100%) contrast(1.2) brightness(0.3);
+        transform: scale(1.05); transition: all 0.8s ease;
+    }
+    /* When Hovered - Brings life to the specific backdrop */
+    .tc-card:hover .tcc-bg { filter: grayscale(0%) contrast(1) brightness(0.6); transform: scale(1); }
+
+    /* The Glass Information Container protecting the text */
+    .tcc-glass {
+        position: absolute; inset: 15px; border-radius: 8px; z-index: 1;
+        background: linear-gradient(to bottom, rgba(5,10,17,0.8) 0%, rgba(5,10,17,0.6) 100%);
+        backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.05);
+        display: flex; flex-direction: column; align-items: center; text-align: center;
+        padding: 40px 25px; transition: all 0.5s ease;
+    }
+    
+    /* On hover, Glass clears slightly revealing more of the real world image */
+    .tc-card:hover .tcc-glass { background: linear-gradient(to bottom, rgba(5,10,17,0.95) 0%, rgba(5,10,17,0.3) 100%); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+
+    /* ======================================================
+       5. CONTENT & ICONOGRAPHY INSIDE THE TICKET
+       ====================================================== */
+    .tcc-icon {
+        width: 60px; height: 60px; border-radius: 50%;
+        background: rgba(212, 163, 115, 0.1); border: 1px solid rgba(212,163,115,0.4);
+        display: flex; justify-content: center; align-items: center; margin-bottom: 25px;
+        color: #d4a373; font-size: 1.3rem; transition: transform 0.5s, background 0.5s;
+    }
+    .tc-card:hover .tcc-icon { transform: rotateY(180deg) scale(1.1); background: rgba(212, 163, 115, 0.3); color: #ebd197;}
+
+    .tcc-type { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: #a0aec0; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 5px; }
+    .tcc-title { font-family: 'Cinzel', serif; font-size: 1.4rem; color: #fff; margin-bottom: 15px; line-height: 1.2; transition: color 0.4s;}
+    .tc-card:hover .tcc-title { color: #ebd197; }
+
+    .tcc-line { width: 25px; height: 2px; background: rgba(212, 163, 115, 0.3); margin-bottom: 15px; transition: width 0.5s, background 0.5s;}
+    .tc-card:hover .tcc-line { width: 70px; background: #d4a373; }
+
+    .tcc-info { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 300; color: #cbd5e1; line-height: 1.7; flex: 1;}
+
+    /* Hidden VIP Action Button */
+    .tcc-btn {
+        display: inline-block; margin-top: auto; padding: 12px 30px; border-radius: 30px;
+        background: transparent; border: 1px solid rgba(212,163,115,0.5);
+        color: #d4a373; font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+        text-decoration: none; transition: all 0.4s;
+        /* Starts transparent and slightly dropped */
+        opacity: 0; transform: translateY(10px);
+    }
+    .tc-card:hover .tcc-btn { opacity: 1; transform: translateY(0); background: #d4a373; color: #020408; font-weight: 600; box-shadow: 0 5px 15px rgba(212,163,115,0.4); }
+
+</style>
+
+<!-- ========================================================
+     THE HTML CONCIERGE DESK
+     ======================================================== -->
+<div class="travel-cosmos" id="travelWatch">
+
+    <div class="tc-header">
+        <div class="tc-sub">The Royal Concierge</div>
+        <h2 class="tc-main">Travel & Stay</h2>
+        <div class="tc-note">We wish your journey to be as flawless as possible. Our concierge team has curated recommendations to ensure your absolute comfort.</div>
+    </div>
+
+    <!-- The 3 Premium Vertical Blocks -->
+    <div class="tc-shelf">
+        
+        <!-- CARD 1: HOTEL ACCOMMODATION -->
+        <div class="tc-card c-ptr">
+            <div class="tcc-bg" style="background-image: url('https://images.unsplash.com/photo-1542314831-c6a4d14fffac?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="tcc-glass">
+                <div class="tcc-icon"><i class="fas fa-bed"></i></div>
+                <div class="tcc-type">Boutique Stay</div>
+                <div class="tcc-title">Tuscany Grand Hotel</div>
+                <div class="tcc-line"></div>
+                <div class="tcc-info">We have reserved a VIP block of suites for our guests at a special rate. Mention "Emma & James" while reserving your suite.</div>
+                <!-- Unlocks instantly on hover -->
+                <a href="https://example.com" target="_blank" class="tcc-btn">Book Suite</a>
+            </div>
+        </div>
+
+        <!-- CARD 2: AIRPORT & ARRIVALS -->
+        <div class="tc-card tc-2 c-ptr">
+            <div class="tcc-bg" style="background-image: url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="tcc-glass">
+                <div class="tcc-icon"><i class="fas fa-plane-departure"></i></div>
+                <div class="tcc-type">Arrival Destination</div>
+                <div class="tcc-title">Florence Airport (FLR)</div>
+                <div class="tcc-line"></div>
+                <div class="tcc-info">Located 40 minutes from the Venue. A private shuttle bus service will be coordinated from the terminals on September 14.</div>
+                <a href="https://example.com" target="_blank" class="tcc-btn">Flight Info</a>
+            </div>
+        </div>
+
+        <!-- CARD 3: REGIONAL NAVIGATION / GIFTS (Alternate info slot) -->
+        <div class="tc-card tc-3 c-ptr">
+            <div class="tcc-bg" style="background-image: url('https://images.unsplash.com/photo-1473186578172-c141e6798cf4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
+            <div class="tcc-glass">
+                <div class="tcc-icon"><i class="fas fa-gift"></i></div>
+                <div class="tcc-type">Wishes & Presents</div>
+                <div class="tcc-title">The Wedding Registry</div>
+                <div class="tcc-line"></div>
+                <div class="tcc-info">Your presence is our ultimate present. However, if you wish to bless us, you can view our handpicked home-builder registry list.</div>
+                <a href="https://example.com" target="_blank" class="tcc-btn">View Registry</a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================================================
+     REVEAL LOGIC
+     ======================================================== -->
+<script>
+    (function(){
+        const targetVlt = document.getElementById('travelWatch');
+        
+        // Single Fire Observer unlocking the Cards
+        const tWatch = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting) {
+                targetVlt.classList.add('unlocked');
+                tWatch.disconnect(); // Safe execution. Unhooks. 
+            }
+        }, { threshold: 0.15 });
+        tWatch.observe(targetVlt);
+
+        // Hardware Magnifying glass pointer (Pulls Ring Logic out of box limits!)
+        if(window.matchMedia("(hover: hover)").matches) {
+            const hvrRings = document.getElementById('cursorRing');
+            document.querySelectorAll('.c-ptr').forEach(box => {
+                box.addEventListener('mouseenter', () => {
+                    if(hvrRings) {
+                        hvrRings.style.width = '65px'; hvrRings.style.height = '65px';
+                        hvrRings.style.backgroundColor = 'rgba(0,0,0,0.6)';
+                        hvrRings.style.backdropFilter = 'blur(6px)'; 
+                    }
+                });
+                box.addEventListener('mouseleave', () => {
+                    if(hvrRings) {
+                        hvrRings.style.width = '35px'; hvrRings.style.height = '35px';
+                        hvrRings.style.backgroundColor = 'transparent';
+                        hvrRings.style.backdropFilter = 'none';
+                    }
+                });
+            });
+        }
+    })();
+</script>

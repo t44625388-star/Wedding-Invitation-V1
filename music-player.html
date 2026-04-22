@@ -1,0 +1,89 @@
+<!-- =========================================
+     CINEMATIC MUSIC PLAYER COMPONENT
+     ========================================= -->
+
+<style>
+    #music-widget {
+        position: fixed; bottom: 30px; right: 30px;
+        z-index: 500; display: flex; align-items: center; gap: 15px;
+        
+        /* HIDDEN STATE FOR ANIMATION */
+        transform: translateY(50px) scale(0.8);
+        opacity: 0; pointer-events: none;
+        transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s; /* 0.5s delay */
+    }
+
+    /* VISIBLE STATE */
+    #music-widget.show { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+
+    /* Track info slide-in */
+    .track-info {
+        font-family: 'Montserrat', sans-serif; text-align: right;
+        color: #fff; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);
+        padding: 5px 15px; border-radius: 20px; border: 1px solid rgba(182,141,64,0.3);
+    }
+    .track-title { font-size: 0.75rem; color: #b68d40; letter-spacing: 1px; text-transform: uppercase; }
+    .track-artist { font-size: 0.65rem; color: #cbd5e1; }
+
+    /* The Vinyl Spin Button */
+    .music-btn {
+        width: 50px; height: 50px; border-radius: 50%;
+        background: radial-gradient(circle, #222 30%, #111 70%);
+        border: 2px solid #b68d40; color: #b68d40;
+        display: flex; justify-content: center; align-items: center;
+        cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+        position: relative;
+    }
+    
+    .music-btn::before {
+        content: ''; position: absolute; width: 12px; height: 12px;
+        background: #b68d40; border-radius: 50%;
+    }
+
+    /* Animation classes */
+    .music-btn i { z-index: 2; color: #111; font-size: 0.6rem; }
+    .spinning { animation: spinRecord 4s linear infinite; }
+    @keyframes spinRecord { 100% { transform: rotate(360deg); } }
+</style>
+
+<div id="music-widget">
+    <div class="track-info">
+        <div class="track-title">Now Playing</div>
+        <div class="track-artist">A Thousand Years</div>
+    </div>
+    
+    <div class="music-btn spinning" id="toggleMusicBtn" onclick="togglePlayer()">
+        <i class="fas fa-music"></i>
+    </div>
+    
+    <!-- Real Audio Source (Moved here from index) -->
+    <audio id="romanticBgAudio" src="https://www.bensound.com/bensound-music/bensound-tenderness.mp3" loop></audio>
+</div>
+
+<script>
+    const audioEl = document.getElementById('romanticBgAudio');
+    const musicBtn = document.getElementById('toggleMusicBtn');
+    let isPlaying = false; // Initially paused until doors open
+
+    // Expose this globally so the Wax Seal click can trigger it
+    window.startGlobalMusic = function() {
+        audioEl.volume = 0.3;
+        audioEl.play().catch(e => console.log("Audio play prevented"));
+        isPlaying = true;
+        musicBtn.classList.add('spinning');
+    };
+
+    // For manual user toggling
+    function togglePlayer() {
+        if (isPlaying) {
+            audioEl.pause();
+            musicBtn.classList.remove('spinning');
+            musicBtn.style.filter = 'grayscale(100%) opacity(0.6)';
+        } else {
+            audioEl.play();
+            musicBtn.classList.add('spinning');
+            musicBtn.style.filter = 'grayscale(0%) opacity(1)';
+        }
+        isPlaying = !isPlaying;
+    }
+</script>

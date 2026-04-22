@@ -1,0 +1,140 @@
+<!-- ========================================================
+     DOOR COMPONENT - "THE GILDED MAHOGANY GATES"
+     ======================================================== -->
+
+<style>
+    /* 1. 3D VAULT ATMOSPHERE */
+    #gate-vault {
+        perspective: 2000px; /* Enhanced depth for swing */
+        width: 100vw; height: 100vh; position: fixed; top: 0; left: 0; z-index: 100;
+        background: #020101; /* Warm dark void */
+        transition: transform 3.5s cubic-bezier(0.7, 0, 0.2, 1), opacity 2.5s ease;
+        transform: scale(1.02);
+    }
+    #gate-vault.walk-through {
+        transform: translateZ(1200px) scale(1);
+        opacity: 0; pointer-events: none;
+    }
+    .gate-vignette {
+        position: absolute; inset: 0; z-index: 95; pointer-events: none;
+        box-shadow: inset 0 0 200px rgba(0,0,0,1), inset 0 0 60px rgba(0,0,0,0.8);
+    }
+
+    /* 2. THE DOORS (Dark Vintage Wood & Gold Matte) */
+    .door-panel {
+        position: absolute; top: -5%; width: 50.5vw; height: 110vh;
+        /* Rich Warm Charcoal/Mahogany */
+        background-color: #0d0806;
+        background-image: 
+            linear-gradient(to right, rgba(0,0,0,0.9) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.9) 100%),
+            radial-gradient(circle at center, rgba(212,163,115,0.03), transparent 60%);
+        transition: transform 3s cubic-bezier(0.6, 0.05, 0.1, 1), filter 3s ease;
+        transform-style: preserve-3d;
+        z-index: 20;
+    }
+
+    /* Inner Paneling */
+    .door-panel::before {
+        content: ''; position: absolute;
+        top: 60px; bottom: 60px; left: 40px; right: 40px;
+        border-top: 1px solid rgba(212, 163, 115, 0.15);
+        border-left: 1px solid rgba(212, 163, 115, 0.15);
+        border-right: 1px solid rgba(0, 0, 0, 0.9);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.9);
+        border-radius: 6px;
+        box-shadow: inset 0 0 80px rgba(0,0,0,0.9), 2px 2px 5px rgba(255,255,255,0.02);
+    }
+
+    /* CENTER OVERLAP MAGIC - Gold Metallic Strip where doors meet */
+    .d-left { 
+        left: 0; transform-origin: left center; 
+        border-right: 8px solid #a67c00; /* Rich solid gold strip */
+        box-shadow: 
+            25px 0 60px rgba(0,0,0,0.9), /* Shadow cast over right door */
+            inset -3px 0 5px rgba(255, 235, 161, 0.4); /* Gold edge highlight */
+        z-index: 25; 
+    }
+    .d-right { 
+        right: 0; transform-origin: right center;
+        border-left: 1px solid rgba(212, 163, 115, 0.1);
+        box-shadow: inset 20px 0 40px rgba(0,0,0,0.95);
+    }
+
+    /* 3. LIGHT CRACK & SWING CHOREOGRAPHY */
+    .god-ray-crack {
+        position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+        width: 0px; height: 100vh; background: #fffdf8;
+        box-shadow: 0 0 100px #d4a373, 0 0 200px #ebd197;
+        opacity: 0; z-index: 15; pointer-events: none; filter: blur(3px);
+        transition: opacity 0.3s ease, width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Stage 1: The Tension Crack */
+    #gate-vault.gates-cracked .god-ray-crack { width: 10px; opacity: 1; filter: blur(5px); }
+    #gate-vault.gates-cracked .d-left { transform: rotateY(-2deg); }
+    #gate-vault.gates-cracked .d-right { transform: rotateY(2deg); }
+
+    /* Stage 2: Heavy Swing */
+    #gate-vault.gates-opened .d-left { transform: rotateY(-105deg); filter: brightness(0.4); }
+    #gate-vault.gates-opened .d-right { transform: rotateY(105deg); filter: brightness(0.4); }
+    
+    #gate-vault.gates-opened .god-ray-crack {
+        width: 300vw; opacity: 0; filter: blur(60px);
+        transition: width 3s cubic-bezier(0.16, 1, 0.3, 1), opacity 3s ease;
+    }
+</style>
+
+<div id="gate-vault">
+    <div class="gate-vignette"></div>
+    <div class="god-ray-crack"></div>
+    
+    <div class="door-panel d-left"></div>
+    <div class="door-panel d-right"></div>
+    
+    <div id="wax-seal-socket"></div>
+</div>
+
+<script>
+    (function(){
+        window.triggerPalaceGates = function() {
+            const gates = document.getElementById('gate-vault');
+            if(!gates) return;
+            
+            // Audio Action
+            try { document.getElementById('chimeSound').play(); } catch(e){}
+
+            // Hide custom pointer
+            document.querySelectorAll('.cursor-dot, .cursor-ring').forEach(el => el.style.opacity = '0');
+
+            // Phase 1: Break & Light leak
+            setTimeout(() => { gates.classList.add('gates-cracked'); }, 100);
+            
+            // Phase 2: The Epic Swing
+            setTimeout(() => { gates.classList.add('gates-opened'); }, 700);
+
+            // Phase 3: Walk Through and Unlock Main App
+            setTimeout(() => {
+                gates.classList.add('walk-through');
+                
+                let targetStage = document.getElementById('wedding-app');
+                if(targetStage) targetStage.classList.add('active');
+                
+                document.querySelectorAll('.cursor-dot, .cursor-ring').forEach(el => el.style.opacity = '1');
+                document.body.style.overflow = "auto";
+            }, 2500); // Wait for door to mostly open before moving camera
+        }
+
+        // Fetch Wax Seal seamlessly
+        fetch('components/wax-seal.html')
+            .then(res => res.text())
+            .then(htmlChunk => {
+                const holderNode = document.getElementById('wax-seal-socket');
+                holderNode.innerHTML = htmlChunk;
+                Array.from(holderNode.querySelectorAll("script")).forEach(scriptBlob => {
+                    const tempS = document.createElement("script");
+                    tempS.appendChild(document.createTextNode(scriptBlob.innerHTML));
+                    scriptBlob.parentNode.replaceChild(tempS, scriptBlob);
+                });
+            });
+    })();
+</script>

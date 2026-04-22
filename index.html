@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emma & James | Royal Celebration</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Great+Vibes&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="global-effects.css">
+
+    <!-- MASTER CONTAINER LOGIC -->
+    <style>
+        body { margin: 0; padding: 0; background-color: #050a11; overflow: hidden; font-family: 'Montserrat', sans-serif; }
+        
+        /* Simple Clean loading mask for users with slow net */
+        #preloader {
+            position: fixed; inset: 0; background: #010204; z-index: 99999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 1s ease;
+        }
+        .spinner { width: 40px; height: 40px; border-radius: 50%; border-top: 2px solid #d4a373; animation: spin 1s infinite linear; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        
+        /* Base Invisible Target. App Sections flow here one by one down scrolling layout */
+        #wedding-app {
+            position: fixed; width: 100vw; height: 100vh; overflow-y: auto; overflow-x: hidden;
+            background: #fcfbf9; opacity: 0; visibility: hidden; z-index: 10;
+            transition: opacity 1.5s ease; 
+        }
+        #wedding-app.active { opacity: 1; visibility: visible; }
+    </style>
+</head>
+<body>
+
+    <div id="preloader"><div class="spinner"></div></div>
+
+    <!-- Background Environment Details  -->
+    <div class="particles-container" id="dustContainer"></div>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- ==================== UI & AUDIO LAYER =================== -->
+    <audio id="chimeSound" src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_c6ccf3232f.mp3?filename=magic-wand-6214.mp3"></audio>
+    <div id="ui-injector-top"></div>
+    <div id="ui-injector-bottom"></div>
+
+    <!-- ================== PHYSICAL GATES LAYER ================= -->
+    <div id="doors-injector"></div> 
+
+    <!-- ================= THE CORE EXPERIENCE LAYER ============= -->
+    <div id="wedding-app"></div>
+
+    <!-- ================= ENGINE SPA SCRIPT (Brain) ============= -->
+    <script>
+        const AppMap = {
+            UI: [], // 'components/navbar.html', 'components/music-player.html'
+            Doors: 'components/royal-doors.html', 
+            Sections: [
+                'sections/hero.html',
+                'sections/profiles.html',
+                'sections/timer.html',
+                'sections/roadmap.html',
+                'sections/pillars.html',
+                'sections/guest-vibes.html',
+                'sections/rsvp.html'
+            ]
+        };
+
+        async function MountNode(url, domLocation, method) {
+            try {
+                let htmlBlock = await fetch(url).then(r => r.text());
+                
+                let carrier = document.createElement(method === "APPEND" ? 'div' : 'span');
+                carrier.innerHTML = htmlBlock;
+                if(method !== "APPEND") domLocation.innerHTML = '';
+                
+                domLocation.appendChild(carrier);
+
+                // Re execute active scripts block seamlessly 
+                carrier.querySelectorAll("script").forEach(oS => {
+                    let nS = document.createElement("script");
+                    if (oS.src) nS.src = oS.src;
+                    else nS.textContent = oS.textContent;
+                    document.head.appendChild(nS).parentNode.removeChild(nS);
+                });
+            } catch(e) { console.error(`Network Failsafe: Unable to locate -> ${url}`) }
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            
+            // 1. Mount Outer Protective Entry Gates layer
+            await MountNode(AppMap.Doors, document.getElementById('doors-injector'), "OVERWRITE");
+
+            // 2. Assemble 7 core web layouts backstages safely stack inside the App Container invisible
+            for(let layer of AppMap.Sections) {
+                await MountNode(layer, document.getElementById('wedding-app'), "APPEND");
+            }
+            
+            // 3. Drop Cover & Start Engine visual Particles
+            setTimeout(() => {
+                document.getElementById('preloader').style.opacity = '0';
+                setTimeout(() => document.getElementById('preloader').remove(), 1000);
+            }, 500);
+
+        });
+
+        // 4. Setup Simple dust / Mouse physics via js loops attached  global file.
+        for(let i=0; i<30; i++) {
+            let dust = document.createElement('div');
+            dust.className = 'dust'; dust.style.left = Math.random()*100+'vw'; dust.style.width=Math.random()*4+2+'px';
+            dust.style.height=dust.style.width; dust.style.animationDuration=Math.random()*4+4+'s';
+            dust.style.animationDelay=Math.random()*5+'s';
+            document.getElementById('dustContainer').appendChild(dust);
+        }
+        
+        document.addEventListener('mousemove', e => {
+            document.getElementById('cursorDot').style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
+            setTimeout(() => document.getElementById('cursorRing').style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`, 40);
+        });
+    </script>
+</body>
+</html>

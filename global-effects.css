@@ -1,0 +1,45 @@
+/* global-effects.css - Sab jagah apply hone wale animations */
+
+/* 1. MAGICAL GOLDEN DUST FALLING EVERYWHERE */
+body {
+    background-color: #0b131e;
+    overflow-x: hidden;
+    margin: 0; padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    color: white;
+}
+
+.particles-container {
+    position: fixed; top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none; z-index: 999;
+}
+
+.dust {
+    position: absolute;
+    background: radial-gradient(circle, #fff, #f5d061, transparent);
+    border-radius: 50%;
+    animation: floatingDust linear infinite;
+}
+
+@keyframes floatingDust {
+    0% { transform: translateY(-5vh) scale(0); opacity: 0; }
+    20% { opacity: 0.8; transform: translateY(20vh) scale(1); }
+    80% { opacity: 0.5; }
+    100% { transform: translateY(100vh) scale(0); opacity: 0; }
+}
+
+/* 2. CUSTOM ELEGANT CURSOR */
+* { cursor: none !important; }
+.cursor-dot {
+    position: fixed; top: 0; left: 0; width: 6px; height: 6px;
+    background: #d4a373; border-radius: 50%;
+    pointer-events: none; z-index: 10000; transform: translate(-50%, -50%);
+}
+.cursor-ring {
+    position: fixed; top: 0; left: 0; width: 35px; height: 35px;
+    border: 1px solid rgba(212, 163, 115, 0.5); border-radius: 50%;
+    pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s;
+}
+.cursor-ring.active { width: 50px; height: 50px; opacity: 0; transition: all 0.2s; }

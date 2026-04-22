@@ -1,0 +1,57 @@
+<!-- =========================================
+     ELEGANT NAVBAR COMPONENT
+     ========================================= -->
+
+<style>
+    #elegant-navbar {
+        position: fixed; top: 0; left: 0; width: 100vw;
+        padding: 20px 5%;
+        display: flex; justify-content: space-between; align-items: center;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px); /* Glassmorphism Premium Blur */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 500;
+        
+        /* HIDDEN STATE FOR ANIMATION */
+        transform: translateY(-100%);
+        opacity: 0;
+        transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 1s ease;
+    }
+
+    /* VISIBLE STATE (Triggered after doors open) */
+    #elegant-navbar.show { transform: translateY(0); opacity: 1; }
+
+    #nav-logo {
+        font-family: 'Great Vibes', cursive;
+        font-size: 2rem; color: #b68d40;
+        text-decoration: none; text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+
+    .nav-links { display: flex; gap: 30px; }
+    
+    .nav-link {
+        font-family: 'Cinzel', serif; font-size: 0.9rem;
+        color: #fff; text-decoration: none; letter-spacing: 1px;
+        position: relative; transition: color 0.3s;
+    }
+
+    /* Underline Hover Animation */
+    .nav-link::after {
+        content: ''; position: absolute; left: 50%; bottom: -5px;
+        width: 0; height: 1px; background: #b68d40;
+        transition: width 0.3s ease, left 0.3s ease;
+    }
+    .nav-link:hover { color: #b68d40; }
+    .nav-link:hover::after { width: 100%; left: 0; }
+</style>
+
+<nav id="elegant-navbar">
+    <a href="#" id="nav-logo">E&J</a>
+    
+    <div class="nav-links">
+        <a href="#story" class="nav-link">Our Story</a>
+        <a href="#gallery" class="nav-link">Gallery</a>
+        <a href="#events" class="nav-link">Events</a>
+        <a href="#rsvp" class="nav-link" style="color: #b68d40; font-weight: 600;">RSVP</a>
+    </div>
+</nav>

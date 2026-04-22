@@ -1,0 +1,200 @@
+<!-- ========================================================
+     PROFILES COMPONENT - "THE OVERLAPPING ROYALS"
+     ======================================================== -->
+
+<style>
+    /* ======================================================
+       1. GLOBAL SECTION CONTAINER & AURA
+       ====================================================== */
+    .prof-cosmos {
+        position: relative; width: 100vw; min-height: 100vh;
+        background: #020408; /* Extremely dark elegant background */
+        padding: clamp(60px, 12vh, 150px) 0; overflow: hidden;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+
+    /* Energy Aura moving behind the couple */
+    .prof-aura-blue { position: absolute; left: 10%; top: 30%; width: 40vw; height: 40vw; background: rgba(84, 115, 145, 0.15); border-radius: 50%; filter: blur(60px); animation: pulseGlow 15s infinite alternate ease-in-out; }
+    .prof-aura-gold { position: absolute; right: 10%; bottom: 10%; width: 40vw; height: 40vw; background: rgba(212, 163, 115, 0.15); border-radius: 50%; filter: blur(60px); animation: pulseGlow 12s infinite alternate-reverse ease-in-out; }
+    
+    @keyframes pulseGlow { 100% { transform: scale(1.5) translate(30px, 30px); opacity: 0.5; } }
+
+    /* ======================================================
+       2. TYPOGRAPHY: THE TITLE SECTION
+       ====================================================== */
+    .prof-header {
+        position: relative; z-index: 10; text-align: center; margin-bottom: clamp(60px, 8vh, 100px);
+        opacity: 0; transform: translateY(40px); transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .prof-cosmos.unlocked .prof-header { opacity: 1; transform: translateY(0); }
+
+    .prof-mini-text { font-family: 'Cinzel', serif; font-size: 0.75rem; letter-spacing: 6px; color: #cbd5e1; margin-bottom: 10px; text-transform: uppercase; }
+    .prof-main-title {
+        font-family: 'Great Vibes', cursive; font-size: clamp(3rem, 6vw, 4.5rem);
+        color: #d4a373; line-height: 1; margin: 0; text-shadow: 0 5px 15px rgba(0,0,0,0.6);
+    }
+
+    /* ======================================================
+       3. THE OVERLAPPING FRAME ARCHITECTURE
+       ====================================================== */
+    .prof-theater {
+        position: relative; z-index: 10;
+        display: flex; flex-direction: row; align-items: center; justify-content: center;
+        max-width: 1200px; width: 100%;
+        /* Handles wrapping gracefully on small mobile screens */
+        flex-wrap: wrap; gap: 40px; padding: 0 5%;
+    }
+    @media (min-width: 992px) {
+        .prof-theater { gap: 0; }
+    }
+
+    /* The Individual Portrait Block */
+    .portrait-card {
+        position: relative; width: clamp(280px, 40vw, 400px);
+        display: flex; flex-direction: column; align-items: center;
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Scroll Entrance states */
+        opacity: 0; transform: translateY(60px) scale(0.95);
+    }
+    .prof-cosmos.unlocked .p-left { transition-delay: 0.3s; opacity: 1; transform: translateY(0) scale(1); }
+    .prof-cosmos.unlocked .p-right { transition-delay: 0.5s; opacity: 1; transform: translateY(0) scale(1); }
+
+    /* For Desktop overlapping setup */
+    @media (min-width: 992px) {
+        .p-left { right: -30px; z-index: 5; } /* Groom pushes right */
+        .p-right { left: -30px; z-index: 4; margin-top: 60px; } /* Bride drops slightly and goes under/left */
+    }
+
+    /* ======================================================
+       4. PHOTO FRAME & "DYNAMIC FOCUS" REVEAL MAGIC
+       ====================================================== */
+    .frame-box {
+        position: relative; width: 100%; aspect-ratio: 4/5;
+        border-radius: 8px; box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        cursor: none; /* Let the global ring handle it, or standard if missing */
+    }
+    .frame-box::before {
+        content: ''; position: absolute; inset: -1px; border-radius: 9px;
+        background: linear-gradient(135deg, rgba(212, 163, 115, 0.5) 0%, rgba(5, 10, 17, 0.2) 50%, rgba(212, 163, 115, 0.2) 100%);
+        z-index: 0; pointer-events: none;
+    }
+    
+    .frame-photo {
+        width: 100%; height: 100%; object-fit: cover; border-radius: 8px; position: relative; z-index: 1;
+        /* The default B&W Moody state */
+        filter: grayscale(100%) contrast(1.1) brightness(0.8);
+        transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* THE THEATER HOVER EFFECT (Complex Sibiling Targeting) */
+    /* When ANY card is hovered inside theater... */
+    .prof-theater:hover .portrait-card {
+        transform: scale(0.95) translateZ(-50px);
+        opacity: 0.6; filter: blur(2px); z-index: 3;
+    }
+    /* EXCEPT the one actually being hovered... Bring it ALIVE! */
+    .prof-theater .portrait-card:hover {
+        transform: scale(1.05) translateZ(50px) !important;
+        opacity: 1 !important; filter: blur(0px) !important; z-index: 10 !important;
+    }
+    .prof-theater .portrait-card:hover .frame-photo {
+        filter: grayscale(0%) contrast(1) brightness(1.1); /* BAM! Color injected */
+        box-shadow: 0 0 40px rgba(212, 163, 115, 0.2);
+    }
+
+    /* Thin gold boundary drawing inside the frame on hover */
+    .frame-liner {
+        position: absolute; inset: 20px; border: 1px solid transparent; z-index: 5;
+        transition: all 0.5s ease; pointer-events: none;
+    }
+    .portrait-card:hover .frame-liner { inset: 12px; border-color: rgba(255, 235, 161, 0.8); }
+
+    /* ======================================================
+       5. EMBELLISHED TYPOGRAPHY DATA
+       ====================================================== */
+    .frame-data {
+        position: relative; width: 90%; background: #050a11;
+        margin-top: -30px; z-index: 6; padding: 25px 20px 20px 20px; text-align: center;
+        border: 1px solid rgba(212, 163, 115, 0.15); border-top-color: #d4a373;
+        border-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        transition: transform 0.4s ease;
+    }
+    
+    .portrait-card:hover .frame-data { transform: translateY(10px); border-color: rgba(212, 163, 115, 0.4); }
+
+    .pd-role { font-family: 'Cinzel', serif; font-size: 0.65rem; color: #a0aec0; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 5px; }
+    .pd-name { font-family: 'Cinzel', serif; font-size: 1.4rem; font-weight: 600; color: #ebd197; line-height: 1.2; margin-bottom: 12px; }
+    .pd-quote { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; font-style: italic; color: #94a3b8; line-height: 1.5; font-weight: 300; }
+    
+    .quote-icon { color: rgba(212, 163, 115, 0.4); font-size: 1.2rem; margin: 0 5px; }
+
+</style>
+
+
+<!-- ========================================================
+     THE PROFILES HTML ENGINE
+     ======================================================== -->
+<div class="prof-cosmos" id="profScrollTarget">
+
+    <!-- Ethereal Space Auras -->
+    <div class="prof-aura-blue"></div>
+    <div class="prof-aura-gold"></div>
+
+    <!-- Title Entry -->
+    <div class="prof-header">
+        <div class="prof-mini-text">Two Destinies Joined</div>
+        <h2 class="prof-main-title">The Bride & Groom</h2>
+    </div>
+
+    <!-- The Symmetrical Cards -->
+    <div class="prof-theater">
+
+        <!-- 1. THE GROOM -->
+        <div class="portrait-card p-left">
+            <div class="frame-box">
+                <div class="frame-liner"></div>
+                <!-- Premium High-Def Unsplash Face -->
+                <img class="frame-photo" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Groom Portrait">
+            </div>
+            
+            <div class="frame-data">
+                <div class="pd-role">The Groom</div>
+                <div class="pd-name">James Sterling</div>
+                <div class="pd-quote"><i class="fas fa-quote-left quote-icon"></i> I knew she was the one when silence between us felt just as comfortable as laughter. <i class="fas fa-quote-right quote-icon"></i></div>
+            </div>
+        </div>
+
+        <!-- 2. THE BRIDE -->
+        <div class="portrait-card p-right">
+            <div class="frame-box">
+                <div class="frame-liner"></div>
+                <!-- Premium High-Def Unsplash Face -->
+                <img class="frame-photo" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Bride Portrait">
+            </div>
+
+            <div class="frame-data">
+                <div class="pd-role">The Bride</div>
+                <div class="pd-name">Emma Collins</div>
+                <div class="pd-quote"><i class="fas fa-quote-left quote-icon"></i> He is the calmness to my storm, and the brightest chapter in my favorite book. <i class="fas fa-quote-right quote-icon"></i></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ========================================================
+     REVEAL LOGIC
+     ======================================================== -->
+<script>
+    (function(){
+        const container = document.getElementById('profScrollTarget');
+        // Triggers the initial scroll pop-in via CSS class replacement
+        const obs = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting) {
+                container.classList.add('unlocked');
+                obs.disconnect(); // Fire once and delete to save resources
+            }
+        }, { threshold: 0.15 });
+        obs.observe(container);
+    })();
+</script>

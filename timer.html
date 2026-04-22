@@ -1,0 +1,199 @@
+<!-- ========================================================
+     TIMER COMPONENT - "THE GLASS ORACLE"
+     ======================================================== -->
+
+<style>
+    /* ======================================================
+       1. SCENE ATMOSPHERE (Deep Cinematic Parallax overlay)
+       ====================================================== */
+    .timer-cosmos {
+        position: relative; width: 100vw; 
+        padding: clamp(80px, 15vh, 150px) 0; overflow: hidden;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        /* Custom image backing with fix background property creates slow scroll effect (parallax) */
+        background: url('https://images.unsplash.com/photo-1469371670807-013ccf25f16a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover fixed;
+        color: white;
+    }
+
+    .t-overlay-dark { position: absolute; inset: 0; background: rgba(3, 5, 10, 0.7); z-index: 1; }
+    /* Vignette dark focus trick around the corners  */
+    .t-overlay-vignette { position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 40%, rgba(1, 2, 4, 0.95) 100%); z-index: 2; pointer-events: none;}
+
+    /* Halo glowing disk far back directly hitting on numbers  */
+    .t-ambient-halo {
+        position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 60vw; height: 60vw; border-radius: 50%; filter: blur(80px);
+        background: radial-gradient(circle, rgba(212,163,115,0.2) 0%, transparent 60%);
+        animation: breathOracle 10s ease-in-out infinite alternate; z-index: 3; pointer-events: none;
+    }
+    @keyframes breathOracle { 100% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.6; } }
+
+    /* ======================================================
+       2. EDITORIAL TYPOGRAPHY & HEADER
+       ====================================================== */
+    .t-header {
+        position: relative; z-index: 10; text-align: center; margin-bottom: 50px;
+        opacity: 0; transform: translateY(40px); transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .timer-cosmos.unlocked .t-header { opacity: 1; transform: translateY(0); }
+
+    .t-mini-title { font-family: 'Cinzel', serif; font-size: 0.8rem; letter-spacing: 5px; color: #ebd197; text-transform: uppercase; margin-bottom: 15px; }
+    .t-main-title { font-family: 'Great Vibes', cursive; font-size: clamp(3rem, 6vw, 4.5rem); color: #fff; line-height: 1; text-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+
+    /* ======================================================
+       3. THE GLASS FROST ENGINE (The Clock Structure)
+       ====================================================== */
+    .t-engine-wrapper {
+        position: relative; z-index: 10; 
+        /* The luxury glass pill wrapper */
+        background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.08); border-top: 1px solid rgba(212,163,115,0.5);
+        border-radius: 60px; /* Pillow oval shape */
+        padding: clamp(20px, 4vw, 40px) clamp(30px, 5vw, 60px);
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 10px 20px rgba(212,163,115,0.05);
+        
+        opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(5px);
+        transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s;
+    }
+    .timer-cosmos.unlocked .t-engine-wrapper { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+
+    /* Time Digit Unit */
+    .t-unit { display: flex; flex-direction: column; align-items: center; width: clamp(70px, 12vw, 120px); }
+    
+    .t-digit { 
+        font-family: 'Cinzel', serif; font-size: clamp(2.5rem, 6vw, 5rem); 
+        color: #ebd197; line-height: 1; font-weight: 400;
+        text-shadow: 0 0 20px rgba(212, 163, 115, 0.3);
+        /* Font Feature so width of digits remains somewhat fixed ensuring no hard jitter*/
+        font-variant-numeric: tabular-nums; 
+    }
+    
+    .t-label {
+        font-family: 'Montserrat', sans-serif; font-size: clamp(0.5rem, 1.2vw, 0.75rem); 
+        letter-spacing: 3px; color: rgba(255,255,255,0.6); text-transform: uppercase; margin-top: 15px;
+    }
+
+    /* Heartbeat blinking colons in between  */
+    .t-colon {
+        font-family: 'Cinzel', serif; font-size: clamp(1.5rem, 4vw, 3rem);
+        color: rgba(212,163,115,0.4); margin: 0 clamp(5px, 1.5vw, 20px); position: relative; top: -15px;
+        animation: pulseColon 1s infinite alternate ease-in-out;
+    }
+    @keyframes pulseColon { 100% { opacity: 0.1; color: white;} }
+
+    /* Changing shape from Pill to block on mobiles as length reduces  */
+    @media (max-width: 650px) {
+        .t-engine-wrapper { flex-wrap: wrap; border-radius: 20px; gap: 20px 0;}
+        .t-unit { width: 45%; }
+        .t-colon { display: none; } /* Removes confusing dot placement for clean wrap structure */
+    }
+
+    /* ======================================================
+       4. CALENDAR SYNC (Floating Reminder Utility button)
+       ====================================================== */
+    .t-link-box {
+        position: relative; z-index: 10; margin-top: 60px;
+        opacity: 0; transform: translateY(20px); transition: all 1s ease 0.6s;
+    }
+    .timer-cosmos.unlocked .t-link-box { opacity: 1; transform: translateY(0); }
+
+    .btn-glass-cal {
+        display: inline-flex; align-items: center; gap: 10px;
+        padding: 14px 30px; border-radius: 30px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);
+        color: #fff; font-family: 'Montserrat', sans-serif; font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; text-decoration: none;
+        transition: all 0.4s ease;
+    }
+    .btn-glass-cal i { color: #d4a373; font-size: 1rem; transition: transform 0.4s; }
+    
+    .btn-glass-cal:hover {
+        background: rgba(212, 163, 115, 0.15); border-color: #d4a373; box-shadow: 0 0 15px rgba(212,163,115,0.2); transform: scale(1.05);
+    }
+    .btn-glass-cal:hover i { transform: scale(1.2) rotate(10deg); color: #ebd197;}
+    
+</style>
+
+
+<!-- ========================================================
+     THE ORACLE HTML LAYOUT
+     ======================================================== -->
+<div class="timer-cosmos" id="trigTimerSec">
+    
+    <div class="t-overlay-dark"></div>
+    <div class="t-overlay-vignette"></div>
+    <div class="t-ambient-halo"></div>
+
+    <div class="t-header">
+        <div class="t-mini-title">Until the moment</div>
+        <h2 class="t-main-title">Our Time Nears</h2>
+    </div>
+
+    <!-- The Magical Pill Glass Case  -->
+    <div class="t-engine-wrapper">
+        <div class="t-unit"><span class="t-digit" id="cx-day">00</span><span class="t-label">Days</span></div>
+        <div class="t-colon">:</div>
+        <div class="t-unit"><span class="t-digit" id="cx-hor">00</span><span class="t-label">Hours</span></div>
+        <div class="t-colon">:</div>
+        <div class="t-unit"><span class="t-digit" id="cx-min">00</span><span class="t-label">Minutes</span></div>
+        <div class="t-colon">:</div>
+        <div class="t-unit"><span class="t-digit" id="cx-sec">00</span><span class="t-label">Seconds</span></div>
+    </div>
+
+    <!-- Utility Action  -->
+    <div class="t-link-box">
+        <!-- Target Link ko original iCal file per set kiya jata he takah calendar trigger hu-->
+        <a href="#events" class="btn-glass-cal">
+            <i class="fas fa-calendar-alt"></i> Mark Calendar
+        </a>
+    </div>
+
+</div>
+
+<!-- ========================================================
+     THE ENGINE SCRIPTS
+     ======================================================== -->
+<script>
+    (function(){
+        // 1. Entrance Cinematic trigger on scroll intersect
+        const targetContainer = document.getElementById('trigTimerSec');
+        const cxObs = new IntersectionObserver((entries) => {
+            if(entries[0].isIntersecting){
+                targetContainer.classList.add('unlocked');
+                cxObs.disconnect(); // Safe Resource management
+            }
+        }, { threshold: 0.25 });
+        cxObs.observe(targetContainer);
+
+
+        // 2. The Core Temporal Physics 
+        // Important Detail : Months arrays normally in Javascripts run from [0 to 11], that means January is 0.. so Sep is actually Number 8 !
+        // Target: 2025, Sept 15, 3:00 PM (15 in 24 hr layout) 
+        const DestTimeline = new Date(2026, 8, 15, 15, 0, 0).getTime();
+        
+        // Pointers memory block save CPU Search
+        const domDay = document.getElementById("cx-day");
+        const domHor = document.getElementById("cx-hor");
+        const domMin = document.getElementById("cx-min");
+        const domSec = document.getElementById("cx-sec");
+
+        // Runs interval mechanism every 1 sec seamlessly 
+        const theOracleClock = setInterval(() => {
+            const CurrentPhase = new Date().getTime();
+            const DiffPhase = DestTimeline - CurrentPhase;
+
+            // Failsafe stop 
+            if(DiffPhase < 0) {
+                clearInterval(theOracleClock);
+                domDay.innerText = domHor.innerText = domMin.innerText = domSec.innerText = "00";
+                return;
+            }
+            
+            // Formula Calculation blocks.. Converts miliseconds to human numbers logic and Pads with standard dual [00] prefix style  
+            domDay.innerText = Math.floor(DiffPhase / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+            domHor.innerText = Math.floor((DiffPhase % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+            domMin.innerText = Math.floor((DiffPhase % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+            domSec.innerText = Math.floor((DiffPhase % (1000 * 60)) / 1000).toString().padStart(2, '0');
+        }, 1000);
+
+    })();
+</script>
